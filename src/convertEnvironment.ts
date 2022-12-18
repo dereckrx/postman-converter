@@ -1,6 +1,6 @@
 export type HttpEnvironment = {[envName: string]: {[key: string]: string}}
 
-export interface PostmanEnvFile {
+export interface PostmanEnvironment {
     "id": string;
     "name": string;
     "values": EnvValue[];
@@ -12,7 +12,7 @@ interface EnvValue {
     "enabled": boolean
 }
 
-export function convertEnvironments(envs: PostmanEnvFile[]): HttpEnvironment {
+export function convertEnvironments(envs: PostmanEnvironment[]): HttpEnvironment {
     return envs.reduce((acc, env) => {
         const envVars = env.values.reduce((acc, {key, value}) => {
             if(key.match("token")) {

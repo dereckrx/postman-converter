@@ -1,13 +1,14 @@
 import * as Path from "path";
 import {HttpsSchemaGetpostmanComJsonCollectionV210,} from "./PostmanTypes";
 import {HttpCollection, HttpRequest} from "./convertCollection";
-import {HttpEnvironment, PostmanEnvFile} from "./convertEnvironment";
+import {HttpEnvironment, PostmanEnvironment} from "./convertEnvironment";
+import {PostmanBackup} from "./converter";
 
 const fs = require('fs');
 
 const POSTMAN_ENVS_PATH = Path.join("..", "postman", "environments");
 const POSTMAN_COLLECTIONS_PATH = Path.join("..", "postman", "collections");
-const HTTP_OUTPUT_PATH = Path.join("..", "http");
+const HTTP_OUTPUT_PATH = Path.join("http");
 const HTTP_ENV_FILE_NAME = "http-client.env.json";
 
 interface FileClientConfig {
@@ -15,6 +16,7 @@ interface FileClientConfig {
     postmanEnvFilesPath: string;
     httpOutputPath: string;
     httpEnvFileName: string;
+    postmanBackupPath: string;
 }
 
 interface HttpFile {
@@ -27,14 +29,19 @@ const config: FileClientConfig = {
     postmanEnvFilesPath: POSTMAN_ENVS_PATH,
     httpOutputPath: HTTP_OUTPUT_PATH,
     httpEnvFileName: HTTP_ENV_FILE_NAME,
+    postmanBackupPath: Path.join("."),
 }
 
-export async function findAllPostmanEnvironments(): Promise<PostmanEnvFile[]> {
+export async function findAllPostmanEnvironments(): Promise<PostmanEnvironment[]> {
     return readFiles(config.postmanEnvFilesPath,".postman_environment.json");
 }
 
 export async function findAllPostmanCollections(): Promise<HttpsSchemaGetpostmanComJsonCollectionV210[]> {
     return readFiles(config.postmanCollectionFilesPath,".postman_collection.json");
+}
+
+export async function findPostmanBackup(): Promise<PostmanBackup[]> {
+    return readFiles(config.postmanBackupPath,"backup.json");
 }
 
 export async function saveHttpEnvironment(httpEnvironments: HttpEnvironment) {
