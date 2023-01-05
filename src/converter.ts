@@ -54,7 +54,7 @@ async function convertAllCollections() {
             saveHttpCollection(convertCollection(collection)));
 }
 
-// convertPostmanFiles().then(() => console.log("DONE"));
+convertAllCollections().then(() => console.log("DONE"));
 
 type PostmanCollection = HttpsSchemaGetpostmanComJsonCollectionV210;
 export async function convertPostmanBackup() {
@@ -93,4 +93,4 @@ export async function convertPostmanBackup() {
             .map(saveHttpCollection)
     ])
 }
-convertPostmanBackup().then(() => console.log("DONE"))
+// convertPostmanBackup().then(() => console.log("DONE"))

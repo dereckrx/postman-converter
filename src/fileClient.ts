@@ -7,8 +7,8 @@ import {PostmanBackup} from "./converter";
 const fs = require('fs');
 
 const POSTMAN_ENVS_PATH = Path.join("..", "postman", "environments");
-const POSTMAN_COLLECTIONS_PATH = Path.join("..", "postman", "collections");
-const HTTP_OUTPUT_PATH = Path.join("http");
+const POSTMAN_COLLECTIONS_PATH = Path.join("..", "sps", "sps-sale-services", "newman");
+const HTTP_OUTPUT_PATH = Path.join("..", "http-postman-collection", "http");
 const HTTP_ENV_FILE_NAME = "http-client.env.json";
 
 interface FileClientConfig {

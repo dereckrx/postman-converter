@@ -1,10 +1,6 @@
-sync_postman_to_git
-sync_git_to_postman
-is there an online scritp to do this
-
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 
 cat ~/Library/Application\ Support/Postman/backup-2022-12-14T22-14-58.303Z.json
-
 
 ## Files are stored in SQL DB here
 
