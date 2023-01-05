@@ -70,7 +70,7 @@ function parseBody(body: Request1["body"]): string {
         case "urlencoded":
             return (body.urlencoded || [])
                 .map(({key, value}) => `${key}=${value}`)
-                .join("\n");
+                .join("&");
 
         case "formdata":
             if (body.formdata?.length === 0) {
