@@ -24,6 +24,7 @@ export interface HttpRequest {
 
 
 export function convertCollection(collection: HttpsSchemaGetpostmanComJsonCollectionV210): HttpCollection {
+    console.log(`Converting collection: ${collection.info.name}`)
     return {
         name: collection.info.name,
         requests: collection.item
@@ -48,14 +49,16 @@ function toHttpRequest(item: Item): HttpRequest {
 
     const request = item.request;
 
-    return {
-        name: name,
+    const result = {
+        name,
         method: request.method,
         url: parseUrl(request),
         headers: parseHeaders(request),
         body: parseBody(request.body),
         script: parseScript(item.event),
     }
+    console.log(`Converted request: ${name}`);
+    return result;
 }
 
 

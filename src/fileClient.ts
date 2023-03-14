@@ -3,12 +3,13 @@ import {HttpsSchemaGetpostmanComJsonCollectionV210,} from "./PostmanTypes";
 import {HttpCollection, HttpRequest} from "./convertCollection";
 import {HttpEnvironment, PostmanEnvironment} from "./convertEnvironment";
 import {PostmanBackup} from "./converter";
+import {PathLike} from "node:fs";
 
 const fs = require('fs');
 
-const POSTMAN_ENVS_PATH = Path.join("..", "postman", "environments");
-const POSTMAN_COLLECTIONS_PATH = Path.join("..", "sps", "sps-sale-services", "newman");
-const HTTP_OUTPUT_PATH = Path.join("..", "http-postman-collection", "http");
+const POSTMAN_ENVS_PATH = Path.join("toConvert");
+const POSTMAN_COLLECTIONS_PATH = Path.join("toConvert");
+const HTTP_OUTPUT_PATH = Path.join("..", "http-postman-collection", "wallet_payments");
 const HTTP_ENV_FILE_NAME = "http-client.env.json";
 
 interface FileClientConfig {
@@ -45,22 +46,16 @@ export async function findPostmanBackup(): Promise<PostmanBackup[]> {
 }
 
 export async function saveHttpEnvironment(httpEnvironments: HttpEnvironment) {
-    return fs.promises.writeFile(
-        Path.join(config.httpOutputPath, config.httpEnvFileName),
-        JSON.stringify(httpEnvironments))
+    return writeFile(Path.join(config.httpOutputPath, config.httpEnvFileName), JSON.stringify(httpEnvironments));
 }
 
 export async function saveHttpCollection({name, requests}: HttpCollection) {
+    console.log(`Saving collection: ${name}`)
     const dirPath = await createCollectionDir(name);
 
     return requests
         .map(toHttpFile)
-        .map(({fileName, data}) =>
-            fs.promises.writeFile(
-                Path.join(dirPath, fileName),
-                data
-            ).catch(console.error)
-    );
+        .map(({fileName, data}) => writeFile(Path.join(dirPath, fileName), data));
 }
 
 async function readFiles<T>(path: string, fileMatch: string): Promise<T[]> {
@@ -68,23 +63,21 @@ async function readFiles<T>(path: string, fileMatch: string): Promise<T[]> {
         .filter((fileName: string) => fileName.match(fileMatch));
     return (await Promise.all(
         filesNames.map((fileName: string) => {
-            console.log(`Reading: ${fileName}`);
+            console.log(`Reading file: ${fileName}`);
             return fs.promises.readFile(Path.join(path, fileName))
         })
     )).map(data => JSON.parse(data));
 }
 
-async function createCollectionDir(dirName: string) {
-    const dirPath = Path.join(config.httpOutputPath, spaceToUnderscores(dirName));
-    if (!fs.existsSync(dirPath)) {
-        await fs.promises.mkdir(dirPath);
-    }
-    return dirPath;
+async function createCollectionDir(dirName: string): Promise<string> {
+    const dirPath = Path.join(config.httpOutputPath, cleanFilename(dirName));
+    return createDir(dirPath).then(() => dirPath);
 }
 
-export const spaceToUnderscores = (s: string) =>
+export const cleanFilename = (s: string) =>
     s.replace(/\s*-\s*/g, "-")
-        .replace(/ /g, "_");
+        .replace(/ /g, "_")
+        .replace('/', '|');
 
 function toHttpFile(request: HttpRequest): HttpFile {
 
@@ -104,7 +97,21 @@ function toHttpFile(request: HttpRequest): HttpFile {
     ].join("\n");
 
     return {
-        fileName: `${spaceToUnderscores(request.name)}.http`,
+        fileName: `${cleanFilename(request.name)}.http`,
         data: httpRequest
     }
+}
+
+function createDir(dirPath: PathLike): Promise<void> {
+    if (fs.existsSync(dirPath)) {
+        console.log(`Directory exists: ${dirPath}`)
+        return Promise.resolve();
+    }
+    console.log(`Creating directory: ${dirPath}`);
+    return fs.promises.mkdir(dirPath, { recursive: true });
+}
+
+function writeFile(path: PathLike, data: string): Promise<void> {
+    console.log(`Writing file: ${path}`);
+    return fs.promises.writeFile(path, data);
 }
