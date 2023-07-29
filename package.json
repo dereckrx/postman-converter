@@ -4,16 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "convert": "ts-node src/converter.ts",
-    "test": "jest"
+    "convert": "ts-node src/runConverter.ts",
+    "test": "jest",
+    "tsc": "tsc"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@jest/globals": "^29.3.1",
+    "@types/jest": "^29.5.3",
     "@types/node": "^18.11.16",
     "jest": "^29.3.1",
-    "ts-jest": "^29.0.3"
+    "ts-jest": "^29.1.1"
   },
   "dependencies": {
     "ts-node": "^10.9.1"

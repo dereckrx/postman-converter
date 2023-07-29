@@ -9,7 +9,7 @@ const fs = require('fs');
 
 const POSTMAN_ENVS_PATH = Path.join("toConvert");
 const POSTMAN_COLLECTIONS_PATH = Path.join("toConvert");
-const HTTP_OUTPUT_PATH = Path.join("..", "http-postman-collection", "wallet_payments");
+const HTTP_OUTPUT_PATH = Path.join("converted");
 const HTTP_ENV_FILE_NAME = "http-client.env.json";
 
 interface FileClientConfig {
@@ -59,6 +59,7 @@ export async function saveHttpCollection({name, requests}: HttpCollection) {
 }
 
 async function readFiles<T>(path: string, fileMatch: string): Promise<T[]> {
+    console.log(`Searching for files: ${path}/*${fileMatch}`)
     const filesNames = (await fs.promises.readdir(path))
         .filter((fileName: string) => fileName.match(fileMatch));
     return (await Promise.all(

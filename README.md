@@ -1,9 +1,39 @@
-ssh-add --apple-use-keychain ~/.ssh/id_rx
+# Postman to Intellij HTTP Converter
 
-cat ~/Library/Application\ Support/Postman/backup-2022-12-14T22-14-58.303Z.json
+## Quickstart
 
-## Files are stored in SQL DB here
+* Export your Postman collections and environments
+* Place the `.postman_collection.json` and `.postman_environment.json` files in `/toConvert`
+* Run `npm install && npm run convert`
+* View converted files in `/converted`
 
-Partitions/45c368ce-afc4-46f6-a246-4dacbd397849/IndexedDB/file__0.indexeddb.blob/3/00/df
+## Supported Features
 
-/Users/TKMA5QN/Library/Application Support/Postman
+* Environments
+* Collections
+  * folders and request names are preserved
+* Requests
+  * headers
+  * variables
+  * JSON bodies (Non-JSON params might need some work)
+* Test Scripts (mostly, see below)
+
+## Currently Unsupported Features
+
+* Pre-request scripts (IntelliJ recently added support)
+* You might lose comments in test scripts, etc
+
+## Supported Files
+
+Currently only `.postman_collection.json` and `.postman_environment.json` are supported.
+
+* If the parser does not know how to parse your requests, you will see `Unsupported request: ...`
+* Parsing an entire Postman backup of many collections and envs is in development
+
+### Converting test scripts
+
+The `converScript.ts` module handles converting special postman test syntax into intelliJ http syntax.
+
+* Not all cases are covered, and some might not be possible to convert 1-1 with IntelliJ http syntax
+* You will see `Not sure how to convert script line: ...` if it's unsure how to convert a script line
+* You might need update the module to support your use case or fix test scripts by hand after converting

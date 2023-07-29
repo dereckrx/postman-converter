@@ -37,8 +37,10 @@ export interface PostmanBackup {
 }
 
 export async function convertPostmanFiles() {
+    console.log("STARTED POSTMAN FILES CONVERSION");
     await convertAllCollections();
     await convertAllEnvFiles();
+    console.log("FINISHED POSTMAN FILES CONVERSION");
 }
 
 async function convertAllEnvFiles() {
@@ -52,13 +54,11 @@ async function convertAllCollections() {
         .map(saveHttpCollection);
 }
 
-convertPostmanFiles()
-    .then(() => console.log("DONE"));
-
 
 type PostmanCollection = HttpsSchemaGetpostmanComJsonCollectionV210;
 
 export async function convertPostmanBackup() {
+    console.log("STARTED POSTMAN BACKUP CONVERSION");
     const backup = (await findPostmanBackup())[0];
     if (!backup) {
         throw Error("No backup found")
@@ -70,7 +70,6 @@ export async function convertPostmanBackup() {
                 name: col.name,
             },
             item: col.requests.map(r => {
-                // const data = r.dataMode === "urlencoded" ?
                 return {
                     name: r.name,
                     event: r.events,
@@ -92,7 +91,8 @@ export async function convertPostmanBackup() {
         ...collections
             .map(convertCollection)
             .map(saveHttpCollection)
-    ])
+    ]).then((result) => {
+        console.log("FINISHED POSTMAN BACKUP CONVERSION");
+        return result;
+    });
 }
-
-// convertPostmanBackup().then(() => console.log("DONE"))
