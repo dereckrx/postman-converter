@@ -1,3 +1,0 @@
-describe("converter", () => {
-    describe("", () => {})
-})

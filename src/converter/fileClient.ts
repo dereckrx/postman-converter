@@ -4,6 +4,7 @@ import {HttpCollection, HttpRequest} from "./convertCollection";
 import {HttpEnvironment, PostmanEnvironment} from "./convertEnvironment";
 import {PostmanBackup} from "./converter";
 import {PathLike} from "node:fs";
+import { toHttpFile } from "./toHttpFile";
 
 const fs = require('fs');
 
@@ -18,11 +19,6 @@ interface FileClientConfig {
     httpOutputPath: string;
     httpEnvFileName: string;
     postmanBackupPath: string;
-}
-
-interface HttpFile {
-    fileName: string;
-    data: string;
 }
 
 const config: FileClientConfig = {
@@ -79,29 +75,6 @@ export const cleanFilename = (s: string) =>
     s.replace(/\s*-\s*/g, "-")
         .replace(/ /g, "_")
         .replace('/', '|');
-
-function toHttpFile(request: HttpRequest): HttpFile {
-
-    const scriptSection = request.script.length > 0 ?
-        ["> {%", ...request.script, "%}"] :
-        [];
-
-    const httpRequest = [
-        "###",
-        `# @name ${request.name}`,
-        `${request.method} ${request.url}`,
-        ...request.headers.map(({key, value}) => `${key}: ${value}`),
-        "",
-        request.body,
-        "",
-        ...scriptSection
-    ].join("\n");
-
-    return {
-        fileName: `${cleanFilename(request.name)}.http`,
-        data: httpRequest
-    }
-}
 
 function createDir(dirPath: PathLike): Promise<void> {
     if (fs.existsSync(dirPath)) {

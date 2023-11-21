@@ -81,6 +81,12 @@ function parseBody(body: Request1["body"]): string {
             }
             console.warn(`body.mode.formdata is not currently implemented`);
             return "";
+        case "graphql":
+            if(!body.graphql) {
+                console.warn(`Missing graphQL body: ${body}`);
+                return "";
+            }
+            return `${body.graphql.query}\n\n${body.graphql.variables}`;
         default:
             console.warn(`Unknown body type: ${body.mode}`);
             return "";
