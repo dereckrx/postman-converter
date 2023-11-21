@@ -2,10 +2,10 @@ import { toHttpFile } from "./toHttpFile";
 import { HttpRequest } from "./convertCollection";
 
 describe("toHttpFile", () => {
-    it("returns http file as string", () => {
+    it("returns http file from GraphQL request", () => {
         const request: HttpRequest = {
             name: "Foo Request",
-            method: "POST",
+            method: "GRAPHQL",
             url: "https://example.com",
             body: "{ body: \"foo\"}\n\n{ id: 1 }",
             headers: [{ key: "header1", value: "header1Value"}],
@@ -18,7 +18,7 @@ describe("toHttpFile", () => {
         expect(result.data).toEqual(
 `###
 # @name Foo Request
-POST https://example.com
+GRAPHQL https://example.com
 header1: header1Value
 
 { body: \"foo\"}

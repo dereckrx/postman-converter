@@ -27,7 +27,7 @@ describe("convertCollection", () => {
         expect(result.requests.length).toEqual(1);
         const request = result.requests[0];
         expect(request.name).toEqual("GraphQL findById");
-        expect(request.method).toEqual("POST");
+        expect(request.method).toEqual("GRAPHQL");
         expect(request.url).toEqual("https://example.com/graphql");
         expect(request.body).toEqual("query findById($id: ID!) {\nfindById(id: $id) {\nid \nitem {\nid \nname \n}\n}\n}\n\n{\n\"id\": \"12345\"\n}");
         expect(request.headers).toEqual([]);

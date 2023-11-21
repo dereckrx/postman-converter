@@ -52,7 +52,7 @@ function toHttpRequest(item: Item): HttpRequest {
 
     const result = {
         name,
-        method: request.method,
+        method: parseMethod(request),
         url: parseUrl(request),
         headers: parseHeaders(request),
         body: parseBody(request.body),
@@ -138,4 +138,15 @@ function isItem(item: Items): item is Item {
 
 function isRequest(request: Request): request is Request1 & Required<Pick<Request1, "method">> {
     return typeof request !== "string" && request.method !== undefined
+}
+
+function parseMethod(request: Request1): string {
+    if(request.body?.mode === "graphql") {
+        return "GRAPHQL";
+    }
+    if(request.method === undefined) {
+        console.warn("Missing request method: ", request)
+        return "";
+    }
+    return request.method;
 }
