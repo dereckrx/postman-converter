@@ -1,10 +1,10 @@
 import * as Path from "path";
 import {HttpsSchemaGetpostmanComJsonCollectionV210,} from "./PostmanTypes";
-import {HttpCollection, HttpRequest} from "./convertCollection";
+import {HttpCollection} from "./convertCollection";
 import {HttpEnvironment, PostmanEnvironment} from "./convertEnvironment";
 import {PostmanBackup} from "./converter";
 import {PathLike} from "node:fs";
-import { toHttpFile } from "./toHttpFile";
+import {toHttpFile} from "./toHttpFile";
 
 const fs = require('fs');
 
