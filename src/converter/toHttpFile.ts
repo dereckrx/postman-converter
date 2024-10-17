@@ -1,30 +1,30 @@
-import { HttpRequest } from "./convertCollection";
-import { cleanFilename } from "./fileClient";
+import {HttpRequest} from "./convertCollection";
+import {cleanFilename} from "./fileClient";
 
-export interface HttpFile {
-    fileName: string;
-    data: string;
+interface HttpFile {
+  fileName: string;
+  data: string;
 }
 
 export function toHttpFile(request: HttpRequest): HttpFile {
 
     const scriptSection = request.script.length > 0 ?
-        ["> {%", ...request.script, "%}"] :
-        [];
+    ["> {%", ...request.script, "%}"] :
+    [];
 
-    const httpRequest = [
-        "###",
-        `# @name ${request.name}`,
-        `${request.method} ${request.url}`,
-        ...request.headers.map(({key, value}) => `${key}: ${value}`),
-        "",
-        request.body,
-        "",
-        ...scriptSection
-    ].join("\n");
+  const httpRequest = [
+    "###",
+    `# @name ${request.name}`,
+    `${request.method} ${request.url}`,
+    ...request.headers.map(({key, value}) => `${key}: ${value}`),
+    "",
+    request.body,
+    "",
+    ...scriptSection
+  ].join("\n");
 
-    return {
-        fileName: `${cleanFilename(request.name)}.http`,
-        data: httpRequest
-    }
+  return {
+    fileName: `${cleanFilename(request.name)}.http`,
+    data: httpRequest
+  }
 }
